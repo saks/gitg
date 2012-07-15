@@ -512,8 +512,14 @@ vertical_autoscroll (GitgDndData *data)
 	gint y;
 	gint offset;
 	gfloat value;
+	GdkDeviceManager *device_manager;
+	GdkDevice *pointer;
 
-	gdk_window_get_pointer (gtk_tree_view_get_bin_window (data->tree_view), NULL, &y, NULL);
+	GdkWindow *win = gtk_tree_view_get_bin_window (data->tree_view);
+
+	device_manager = gdk_display_get_device_manager (gdk_window_get_display (win));
+	pointer = gdk_device_manager_get_client_pointer (device_manager);
+	gdk_window_get_device_position (win, pointer, NULL, &y, NULL);
 	gtk_tree_view_convert_bin_window_to_tree_coords (data->tree_view, 0, y, NULL, &y);
 
 	gtk_tree_view_get_visible_rect (data->tree_view, &visible_rect);

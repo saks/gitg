@@ -1114,11 +1114,16 @@ get_info_at_pointer (GitgCommitView    *view,
 	gint height;
 	gint buf_x;
 	gint buf_y;
+	GdkDeviceManager *device_manager;
+	GdkDevice *pointer;
+
 
 	/* Get where the pointer really is. */
 	GdkWindow *win = gtk_text_view_get_window (textview, GTK_TEXT_WINDOW_TEXT);
 
-	gdk_window_get_pointer (win, &x, &y, NULL);
+	device_manager = gdk_display_get_device_manager (gdk_window_get_display (win));
+	pointer = gdk_device_manager_get_client_pointer (device_manager);
+	gdk_window_get_device_position (win, pointer, &x, &y, NULL);
 
 	width = gdk_window_get_width (win);
 	height = gdk_window_get_height (win);
@@ -1237,11 +1242,16 @@ gutter_event (GtkWidget      *widget,
 	GitgDiffLineType line_type;
 	GtkSourceGutter *gutter;
 	GtkSourceGutterRenderer *renderer_at_pos;
+	GdkDeviceManager *device_manager;
+	GdkDevice *pointer;
+
 
 	/* Get where the pointer really is. */
 	GdkWindow *win = gtk_text_view_get_window (textview, GTK_TEXT_WINDOW_LEFT);
 
-	gdk_window_get_pointer (win, &x, &y, NULL);
+	device_manager = gdk_display_get_device_manager (gdk_window_get_display (win));
+	pointer = gdk_device_manager_get_client_pointer (device_manager);
+	gdk_window_get_device_position (win, pointer, &x, &y, NULL);
 
 	width = gdk_window_get_width (win);
 	height = gdk_window_get_height (win);
