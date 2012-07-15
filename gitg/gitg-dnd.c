@@ -328,7 +328,7 @@ create_revision_drag_icon (GtkTreeView  *tree_view,
 	gint height;
 
 	pango_layout_get_pixel_size (layout, &width, &height);
-	
+
 	cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width + 4, height + 4);
 	cairo_t *context = cairo_create (surface);
 
@@ -377,10 +377,10 @@ begin_drag (GtkWidget   *widget,
 	gint hot_x;
 	gint hot_y;
 	GitgCellRendererPath *cell;
-	GitgRef *ref = get_ref_at_pos (tree_view, 
-	                               (gint)data->x, 
-	                               (gint)data->y, 
-	                               &hot_x, 
+	GitgRef *ref = get_ref_at_pos (tree_view,
+	                               (gint)data->x,
+	                               (gint)data->y,
+	                               &hot_x,
 	                               &hot_y,
 	                               &cell,
 	                               NULL);
@@ -472,9 +472,9 @@ begin_drag (GtkWidget   *widget,
 static void
 update_highlight (GitgDndData *data, gint x, gint y)
 {
-	GitgRef *ref = get_ref_at_pos (data->tree_view, 
-	                               x, 
-	                               y, 
+	GitgRef *ref = get_ref_at_pos (data->tree_view,
+	                               x,
+	                               y,
 	                               NULL,
 	                               NULL,
 	                               NULL,
@@ -512,8 +512,14 @@ vertical_autoscroll (GitgDndData *data)
 	gint y;
 	gint offset;
 	gfloat value;
+	GdkDeviceManager *device_manager;
+	GdkDevice *pointer;
 
-	gdk_window_get_pointer (gtk_tree_view_get_bin_window (data->tree_view), NULL, &y, NULL);
+	GdkWindow *win = gtk_tree_view_get_bin_window (data->tree_view);
+
+	device_manager = gdk_display_get_device_manager (gdk_window_get_display (win));
+	pointer = gdk_device_manager_get_client_pointer (device_manager);
+	gdk_window_get_device_position (win, pointer, NULL, &y, NULL);
 	gtk_tree_view_convert_bin_window_to_tree_coords (data->tree_view, 0, y, NULL, &y);
 
 	gtk_tree_view_get_visible_rect (data->tree_view, &visible_rect);
@@ -545,8 +551,8 @@ add_scroll_timeout (GitgDndData *data)
 {
 	if (data->scroll_timeout == 0)
 	{
-		data->scroll_timeout = g_timeout_add (50, 
-		                                      (GSourceFunc)vertical_autoscroll, 
+		data->scroll_timeout = g_timeout_add (50,
+		                                      (GSourceFunc)vertical_autoscroll,
 		                                      data);
 	}
 }
